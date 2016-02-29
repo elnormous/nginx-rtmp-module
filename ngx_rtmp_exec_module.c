@@ -130,7 +130,7 @@ typedef struct {
     ngx_str_t                           dirname;  /* /tmp/rec */
     ngx_str_t                           recorder;
     u_char                              name[NGX_RTMP_MAX_NAME];
-    u_char                              name_slow[NGX_RTMP_MAX_NAME];
+    u_char                              truncated_name[NGX_RTMP_MAX_NAME];
     u_char                              args[NGX_RTMP_MAX_ARGS];
     ngx_array_t                         push_exec;   /* ngx_rtmp_exec_t */
     ngx_rtmp_exec_pull_ctx_t           *pull;
@@ -333,9 +333,9 @@ static ngx_rtmp_eval_t ngx_rtmp_exec_push_specific_eval[] = {
       ngx_rtmp_exec_eval_ctx_cstr,
       offsetof(ngx_rtmp_exec_ctx_t, name) },
 
-    { ngx_string("name_slow"),
+    { ngx_string("truncated_name"),
       ngx_rtmp_exec_eval_ctx_cstr,
-      offsetof(ngx_rtmp_exec_ctx_t, name_slow) },
+      offsetof(ngx_rtmp_exec_ctx_t, truncated_name) },
 
     { ngx_string("args"),
       ngx_rtmp_exec_eval_ctx_cstr,
@@ -906,7 +906,6 @@ ngx_rtmp_exec_init_ctx(ngx_rtmp_session_t *s, u_char name[NGX_RTMP_MAX_NAME],
     ngx_rtmp_exec_conf_t       *ec;
     ngx_rtmp_exec_app_conf_t   *eacf;
     ngx_rtmp_exec_main_conf_t  *emcf;
-    char                        name_slow[NGX_RTMP_MAX_NAME];
     int                         last_pos = -1;
     ngx_uint_t                  i;
 
@@ -966,21 +965,20 @@ done:
 
     for (i = 0; i < NGX_RTMP_MAX_NAME; ++i)
     {
-      if (name[i] == '_') last_pos = i;
-      if (name[i] == 0)
+      if (name[i] == '_')
       {
-        if (last_pos == -1) last_pos = i;
+        last_pos = i;
+      }
+      else if (name[i] == 0)
+      {
         break;
       }
     }
 
-    memset(name_slow, 0, NGX_RTMP_MAX_NAME);
-    ngx_memcpy(name_slow, name, last_pos);
-    strcat(name_slow, "_slow");
+    if (last_pos == -1) last_pos = NGX_RTMP_MAX_NAME;
 
-    ngx_memcpy(ctx->name_slow, name_slow, NGX_RTMP_MAX_NAME);
-
-
+    memset(ctx->truncated_name, 0, NGX_RTMP_MAX_NAME);
+    ngx_memcpy(ctx->truncated_name, name, last_pos);
     ngx_memcpy(ctx->args, args, NGX_RTMP_MAX_ARGS);
 
     ctx->flags |= flags;
