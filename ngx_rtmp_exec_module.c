@@ -130,7 +130,7 @@ typedef struct {
     ngx_str_t                           dirname;  /* /tmp/rec */
     ngx_str_t                           recorder;
     u_char                              name[NGX_RTMP_MAX_NAME];
-    u_char                              truncated_name[NGX_RTMP_MAX_NAME];
+    u_char                              truncatedname[NGX_RTMP_MAX_NAME];
     u_char                              args[NGX_RTMP_MAX_ARGS];
     ngx_array_t                         push_exec;   /* ngx_rtmp_exec_t */
     ngx_rtmp_exec_pull_ctx_t           *pull;
@@ -333,9 +333,9 @@ static ngx_rtmp_eval_t ngx_rtmp_exec_push_specific_eval[] = {
       ngx_rtmp_exec_eval_ctx_cstr,
       offsetof(ngx_rtmp_exec_ctx_t, name) },
 
-    { ngx_string("truncated_name"),
+    { ngx_string("truncatedname"),
       ngx_rtmp_exec_eval_ctx_cstr,
-      offsetof(ngx_rtmp_exec_ctx_t, truncated_name) },
+      offsetof(ngx_rtmp_exec_ctx_t, truncatedname) },
 
     { ngx_string("args"),
       ngx_rtmp_exec_eval_ctx_cstr,
@@ -977,8 +977,8 @@ done:
 
     if (last_pos == -1) last_pos = NGX_RTMP_MAX_NAME;
 
-    memset(ctx->truncated_name, 0, NGX_RTMP_MAX_NAME);
-    ngx_memcpy(ctx->truncated_name, name, last_pos);
+    memset(ctx->truncatedname, 0, NGX_RTMP_MAX_NAME);
+    ngx_memcpy(ctx->truncatedname, name, last_pos);
     ngx_memcpy(ctx->args, args, NGX_RTMP_MAX_ARGS);
 
     ctx->flags |= flags;
