@@ -977,7 +977,6 @@ done:
 
     if (last_pos == -1) last_pos = NGX_RTMP_MAX_NAME;
 
-    memset(ctx->truncatedname, 0, NGX_RTMP_MAX_NAME);
     ngx_memcpy(ctx->truncatedname, name, last_pos);
     ngx_memcpy(ctx->args, args, NGX_RTMP_MAX_ARGS);
 
