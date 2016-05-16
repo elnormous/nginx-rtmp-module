@@ -591,6 +591,7 @@ ngx_rtmp_codec_reconstruct_meta(ngx_rtmp_session_t *s)
           ngx_string("height"),
           &v.height, 0 },
 
+#ifdef METADATA_DISPLAY_SIZE
         { NGX_RTMP_AMF_NUMBER,
           ngx_string("displayWidth"),
           &v.width, 0 },
@@ -598,6 +599,7 @@ ngx_rtmp_codec_reconstruct_meta(ngx_rtmp_session_t *s)
         { NGX_RTMP_AMF_NUMBER,
           ngx_string("displayHeight"),
           &v.height, 0 },
+#endif
 
         { NGX_RTMP_AMF_NUMBER,
           ngx_string("duration"),
