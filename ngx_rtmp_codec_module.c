@@ -575,6 +575,7 @@ ngx_rtmp_codec_reconstruct_meta(ngx_rtmp_session_t *s)
         double                      audio_codec_id;
         u_char                      profile[32];
         u_char                      level[32];
+        double                      gop_size;
     }                               v;
 
     static ngx_rtmp_amf_elt_t       out_inf[] = {
@@ -634,6 +635,10 @@ ngx_rtmp_codec_reconstruct_meta(ngx_rtmp_session_t *s)
         { NGX_RTMP_AMF_STRING,
           ngx_string("level"),
           &v.level, sizeof(v.level) },
+
+        { NGX_RTMP_AMF_NUMBER,
+          ngx_string("_METADATA_GOPSIZE"),
+          &v.gop_size, 0 },
     };
 
     static ngx_rtmp_amf_elt_t       out_elts[] = {
@@ -667,6 +672,7 @@ ngx_rtmp_codec_reconstruct_meta(ngx_rtmp_session_t *s)
     v.video_codec_id = ctx->video_codec_id;
     v.audio_data_rate = ctx->audio_data_rate;
     v.audio_codec_id = ctx->audio_codec_id;
+    v.gop_size = ctx->gop_size;
     ngx_memcpy(v.profile, ctx->profile, sizeof(ctx->profile));
     ngx_memcpy(v.level, ctx->level, sizeof(ctx->level));
 
@@ -747,6 +753,7 @@ ngx_rtmp_codec_meta_data(ngx_rtmp_session_t *s, ngx_rtmp_header_t *h,
         u_char                      audio_codec_id_s[32];
         u_char                      profile[32];
         u_char                      level[32];
+        double                      gop_size;
     }                               v;
 
     static ngx_rtmp_amf_elt_t       in_video_codec_id[] = {
@@ -816,6 +823,10 @@ ngx_rtmp_codec_meta_data(ngx_rtmp_session_t *s, ngx_rtmp_header_t *h,
         { NGX_RTMP_AMF_STRING,
           ngx_string("level"),
           &v.level, sizeof(v.level) },
+
+        { NGX_RTMP_AMF_NUMBER,
+          ngx_string("_METADATA_GOPSIZE"),
+          &v.gop_size, 0 },
     };
 
     static ngx_rtmp_amf_elt_t       in_elts[] = {
@@ -866,6 +877,7 @@ ngx_rtmp_codec_meta_data(ngx_rtmp_session_t *s, ngx_rtmp_header_t *h,
             ? NGX_RTMP_AUDIO_UNCOMPRESSED : (ngx_uint_t) v.audio_codec_id_n);
     ngx_memcpy(ctx->profile, v.profile, sizeof(v.profile));
     ngx_memcpy(ctx->level, v.level, sizeof(v.level));
+    ctx->gop_size = (ngx_uint_t) v.gop_size;
 
     ngx_log_debug8(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
             "codec: data frame: "

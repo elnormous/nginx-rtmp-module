@@ -72,6 +72,7 @@ typedef struct {
     ngx_uint_t                  audio_channels; /* 1, 2 */
     u_char                      profile[32];
     u_char                      level[32];
+    ngx_uint_t                  gop_size;
 
     ngx_chain_t                *avc_header;
     ngx_chain_t                *aac_header;
