@@ -878,12 +878,12 @@ ngx_rtmp_codec_meta_data(ngx_rtmp_session_t *s, ngx_rtmp_header_t *h,
     ngx_log_debug8(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
             "codec: data frame: "
             "width=%ui height=%ui duration=%ui frame_rate=%ui "
-            "video=%s (%ui) audio=%s (%ui) gop_size=%ui",
+            "video=%s (%ui) audio=%s (%ui)",
             ctx->width, ctx->height, ctx->duration, ctx->frame_rate,
             ngx_rtmp_get_video_codec_name(ctx->video_codec_id),
             ctx->video_codec_id,
             ngx_rtmp_get_audio_codec_name(ctx->audio_codec_id),
-            ctx->audio_codec_id, ctx->gop_size);
+            ctx->audio_codec_id);
 
     switch (cacf->meta) {
         case NGX_RTMP_CODEC_META_ON:
