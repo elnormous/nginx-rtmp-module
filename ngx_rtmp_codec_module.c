@@ -584,6 +584,7 @@ ngx_rtmp_codec_reconstruct_meta(ngx_rtmp_session_t *s)
           ngx_string("Server"),
           "NGINX RTMP (github.com/arut/nginx-rtmp-module)", 0 },
 
+#ifdef METADATA_DISPLAY_SIZE
         { NGX_RTMP_AMF_NUMBER,
           ngx_string("width"),
           &v.width, 0 },
@@ -592,7 +593,6 @@ ngx_rtmp_codec_reconstruct_meta(ngx_rtmp_session_t *s)
           ngx_string("height"),
           &v.height, 0 },
 
-#ifdef METADATA_DISPLAY_SIZE
         { NGX_RTMP_AMF_NUMBER,
           ngx_string("displayWidth"),
           &v.width, 0 },
